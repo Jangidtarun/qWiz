@@ -1,0 +1,21 @@
+{% extends 'app1/base.html' %}
+
+{% block body %}
+
+<h1>My Quizzes</h1>
+
+<h2>Created Quizzes</h2>
+<ul>
+    {% for quiz in created_quizzes %}
+    <li><a href="{% url 'app1:quiz_details' quiz.id %}">{{ quiz.title }}</a></li>
+    {% endfor %}
+</ul>
+
+<h2>Participated Quizzes</h2>
+<ul>
+    {% for quiz in participated_quizzes %}
+    <li><a href="{% url 'app1:quiz_details' quiz.id %}">{{ quiz.title }}</a></li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

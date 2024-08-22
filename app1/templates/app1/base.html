@@ -1,0 +1,126 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="h-100" data-bs-theme="light">
+
+<head>
+    <script></script>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="shortcut icon" href="{% static 'app1/images/favicon/key-72.png' %}" type="image/x-icon">
+        <title>{% block title %}{% endblock %}</title>
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+        <link rel="stylesheet" href="{% static 'app1/css/style.css' %}">
+
+        {% block css %}{% endblock %}
+
+    </head>
+
+<body class='d-flex flex-column h-100 py-4 bg-body-tertiary'>
+    <header>
+        <!-- Fixed navbar -->
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand text-success" href="{% url 'app1:index' %}">qWiz</a>
+                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="navbarCollapse">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{% url 'app1:index' %}"><i
+                                    class="bi bi-house-door-fill"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'app1:my_quizzes' %}"><i
+                                    class="bi bi-bookmark-fill"></i>Myquizzes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'app1:create_quiz' %}"><i
+                                    class="bi bi-file-earmark-plus-fill"></i> Contribute</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+
+                        </li>
+
+                        <div class="dropdown">
+                            <button class="btn btn-secondary rounded-pill p-1" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <span
+                                    class="badge d-flex align-items-center p-1  text-body bg-transparent rounded-pill"><img
+                                        class="rounded-circle me-1" width="24" height="24"
+                                        src="{% static 'app1/images/favicon/key-72.png' %}" alt="">
+                                    <div class="col px-3 ">
+                                        <div class="row text-light">
+                                            {{ user.firstname }} {{ user.lastname }}
+                                        </div>
+                                        <div class="row text-light">
+                                            @{{ user.username }}
+                                        </div>
+                                    </div>
+                                </span>
+                            </button>
+
+                            <ul class="dropdown-menu"
+                                style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 40px);"
+                                data-popper-placement="bottom-start">
+                                <li>
+                                    <h6 class="dropdown-header">Dropdown header</h6>
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'app1:user_profile' %}"><i
+                                            class="bi bi-person-fill"></i> Profile</a></li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-speedometer"></i> Dashboard</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-gear-fill"></i> Settings</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'app1:logout' %}"><i
+                                            class="bi bi-door-closed-fill"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {% block header %}
+    {% endblock %}
+
+
+    <main class="flex-shrink-0">
+        <div class="container">
+            <!-- <h1 class="mt-5">Sticky footer with fixed navbar</h1>
+        <p class="lead">Pin a footer to the bottom of the viewport in desktop browsers with this custom HTML and CSS. A fixed navbar has been added with <code class="small">padding-top: 60px;</code> on the <code class="small">main &gt; .container</code>.</p> -->
+            {% block body %}
+            {% endblock %}
+        </div>
+    </main>
+
+
+    <footer class="footer mt-auto py-3 bg-body-tertiary">
+        <div class="container">
+            <span class="text-body-secondary">Place sticky footer content here.</span>
+        </div>
+    </footer>
+    {% block footer %}
+    {% endblock %}
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

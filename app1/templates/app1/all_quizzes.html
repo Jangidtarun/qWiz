@@ -1,0 +1,71 @@
+{% extends "app1/base.html" %}
+
+{% block body %}
+
+<main>
+
+  <section class="py-2 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">All Quizzes</h1>
+        <p class="lead text-body-secondary">Below collection includes all open and closed quizzes</p>
+        <p>
+          <a href="{% url 'app1:index' %}" class="btn btn-success my-2">Available Quizzes</a>
+          <a href="{% url 'app1:archived' %}" class="btn btn-secondary my-2">Go to Archive</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div class="album py-2 bg-body-tertiary">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        {% for quiz in allquizzes %}
+        {% if quiz.status %}
+        <!-- show is green -->
+        <div class="col">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h4 class="card-title">{{ quiz.title }}</h4>
+              <p class="card-text">{{ quiz.description|truncatechars:100 }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{% url 'app1:quiz_details' quiz.id %}" class="btn btn-sm btn-outline-secondary">View</a>
+                </div>
+                <small class="text-body-secondary">{{ quiz.time_limit }} mins</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <!-- show it red -->
+        <div class="col">
+          <div class="card shadow-sm bg-danger bg-opacity-10">
+            <div class="card-body">
+              <h4 class="card-title">{{ quiz.title }}</h4>
+              <p class="card-text">{{ quiz.description|truncatechars:100 }}</p>
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <a href="{% url 'app1:quiz_details' quiz.id %}"
+                    class="disabled btn btn-sm btn-outline-secondary">View</a>
+                </div>
+                <div>
+                  <small class="text-danger me-2">Closed</small>
+                  <small class="text-body-secondary">{{ quiz.time_limit }} mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <h3>No quizzes are open at the time</h3>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  </div>
+
+</main>
+
+{% endblock body %}

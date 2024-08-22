@@ -1,0 +1,47 @@
+{% extends 'app1/base.html' %}
+
+{% block body %}
+
+<div class="bd-example-snippet bd-code-snippet m-auto" style="max-width: 600px;">
+    <div>
+        <p class="fs-1">{{ quiz.title }}</p>
+        <p>Time left: <span id="time_left">0</span></p>
+    </div>
+
+    <div class="bd-example m-0 border-0">
+
+        <div class="bd-example m-0 border-0">
+    
+    <div class="progress-stacked">
+        <div class="progress" role="progressbar" aria-label="Segment one - default example" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar"></div>
+        </div>
+        <div class="progress" role="progressbar" aria-label="Segment two - animated striped success example" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+          </div>
+        </div>    
+    </div>
+    
+    <form action="{% url 'app1:results' quiz.id %}" method='post'>
+    {% csrf_token %}
+        <ul class="list-group list-group-flush">
+            {% for question in questions %}
+                <li class="list-group-item mb-3 rounded bg-secondary bg-opacity-50 border">
+                <p class="fs-2 text-body-secondary"><small class="text-dark fs-6 pe-3">{{ forloop.counter }}. </small>{{ question.question_text }}</p>
+                {% for choice in question.choice_set.all %}
+                    <div class="form-check ms-4">
+                        <input type="radio" id="option-{{ choice.id }}" name="option-{{ question.id }}" value="{{ choice.id }}" class="fs-5 form-check-input"/>
+
+                        <label class="fs-5 form-check-label" for="option-{{ choice.id }}">{{ choice.choice_text }}</label>
+                    </div>
+                {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+        
+    </div>
+</div>
+
+{% endblock %}

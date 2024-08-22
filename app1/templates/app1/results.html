@@ -1,0 +1,17 @@
+{% extends 'app1/base.html' %}
+
+{% block body %}
+
+<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">{{ user.username }},</h1>
+        <p class="col-md-8 fs-4">Your addition quiz is complete. View your score and analysis.</p>
+
+        <p class="fs-2">You scored {{ score }} out of {{ total_questions }}</p>
+        <p class="fs-1 text-success">{{ percentage }}%</p>
+
+        <a class="btn btn-primary btn-lg" href="#">Dashboard</a>
+    </div>
+</div>
+
+{% endblock %}

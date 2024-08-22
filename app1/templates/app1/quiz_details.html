@@ -1,0 +1,52 @@
+{% extends 'app1/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<main class="px-3">
+    <div class="d-flex align-items-end">
+        <h1>{{ quiz.title }}</h1>
+        <small class="m-0 ms-2 mb-2 text-muted">{{ quiz.created_at }}</small>
+    </div>
+    <p class="lead">{{ quiz.description }}</p>
+
+    <ul class="list-group" style="max-width: 400px;">
+        <li class="list-group-item d-flex justify-content-between align-items-center">Time Limit<span
+                class="badge bg-primary rounded-pill">{{ quiz.time_limit }} mins</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between align-items-center">Difficulty<span
+                class="badge bg-primary rounded-pill">{{ quiz.difficulty_level | title}}</span>
+        </li>
+
+        <li class="list-group-item d-flex justify-content-between align-items-center">Category<span
+                class="badge bg-primary rounded-pill">{{ quiz.category | title }}</span>
+        </li>
+    </ul>
+    <a href="{% url 'app1:take_quiz' quiz.id %}" class="btn btn-warning my-2" data-bs-toggle="modal"
+        data-bs-target="#modal-confirm">Take Quiz</a>
+
+    <div class="modal fade" id="modal-confirm" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-3 shadow">
+                <div class="modal-body p-4 text-center">
+                    <h5 class="mb-0">Are you sure?</h5>
+                    <p class="mb-0">You can always change your mind. It isn't that easy as it sounds.</p>
+                </div>
+
+                <div class="modal-footer flex-nowrap p-0">
+                    <a href="{% url 'app1:take_quiz' quiz.id %}"
+                        class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><span
+                            class="text-success"><strong>Take Quiz</strong></span></a>
+
+                    <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0"
+                        data-bs-dismiss="modal"><span class="text-danger"><strong>No, thanks</strong></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
+
+{% block script %}
+{% endblock %}
