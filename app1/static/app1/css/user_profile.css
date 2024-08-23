@@ -1,0 +1,28 @@
+.file-input {
+    display: none;
+    margin: auto;
+    border: 1px solid #ccc;
+    width: 200px;
+    border-radius: 5px;
+}
+
+.file-input::file-selector-button {
+    visibility: hidden;
+}
+
+.file-input::before {
+    display: none;
+    /* padding: 10px; */
+    /* background-color: #f0f0f0; */
+    /* border: 1px solid #ccc; */
+    /* border-radius: 5px; */
+    cursor: pointer;
+}
+
+.file-input:hover::before {
+    background-color: #e0e0e0;
+}
+
+.profile-form{
+    display: none;
+}
