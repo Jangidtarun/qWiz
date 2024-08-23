@@ -1,47 +1,56 @@
 {% extends 'app1/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'app1/css/take_quiz.css' %}">
+{% endblock %}
 
 {% block body %}
 
-<div class="bd-example-snippet bd-code-snippet m-auto" style="max-width: 600px;">
+<div class="m-auto quiz-view">
     <div>
         <p class="fs-1">{{ quiz.title }}</p>
-        <p>Time left: <span id="time_left">0</span></p>
+        <input type="hidden" name="timelimit" id="time-limit" value="{{ quiz.time_limit }}">
+        <p><span class="display-2" id="minutes">0</span> M <span class="display-2" id="seconds">0</span> S</p>
     </div>
 
-    <div class="bd-example m-0 border-0">
-
-        <div class="bd-example m-0 border-0">
-    
-    <div class="progress-stacked">
-        <div class="progress" role="progressbar" aria-label="Segment one - default example" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar"></div>
-        </div>
-        <div class="progress" role="progressbar" aria-label="Segment two - animated striped success example" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
-          </div>
-        </div>    
+    <div class="progress mb-3" style="height: 8px;">
+        <div class="progress-bar text-bg-success" id="progress-bar" style="width: 100%;"></div>
     </div>
-    
+
     <form action="{% url 'app1:results' quiz.id %}" method='post'>
     {% csrf_token %}
-        <ul class="list-group list-group-flush">
-            {% for question in questions %}
-                <li class="list-group-item mb-3 rounded bg-secondary bg-opacity-50 border">
-                <p class="fs-2 text-body-secondary"><small class="text-dark fs-6 pe-3">{{ forloop.counter }}. </small>{{ question.question_text }}</p>
-                {% for choice in question.choice_set.all %}
-                    <div class="form-check ms-4">
-                        <input type="radio" id="option-{{ choice.id }}" name="option-{{ question.id }}" value="{{ choice.id }}" class="fs-5 form-check-input"/>
+        {% for question in questions %}
+            <div class="px-4 py-2 mb-3 bg-info bg-opacity-10 border-bottom border-2 border-info">
+                <div class="quiz-question">{{ question.question_text }}</div>
+                <ul class="d-flex flex-row flex-wrap quiz-choices align-items-center">
+                    {% for choice in question.choice_set.all %}
+                        <div class="form-check d-flex flex-row align-items-center justify-content-center">
+                            <input class="form-check-input" type="radio" id="option-{{ choice.id }}" name="option-{{ question.id }}" value="{{ choice.id }}">
+                            <label class="form-check-label fs-4" for="option-{{ choice.id }}">{{ choice.choice_text }}</label>
+                        </div>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        <button type="submit" id="submit-button" class="btn btn-success">Submit</button>
 
-                        <label class="fs-5 form-check-label" for="option-{{ choice.id }}">{{ choice.choice_text }}</label>
-                    </div>
-                {% endfor %}
-                </li>
-            {% endfor %}
-        </ul>
-        <button type="submit" class="btn btn-success">Submit</button>
+
+
     </form>
-        
+</div>
+
+<div class="toast-container" id="toast-container">    
+    <div class="toast" id="toast" role="alert" aria-live="assertive">
+        <div class="toast-header">
+            <strong class="me-auto">qWiz</strong>
+        </div>
+        <div class="toast-body">This quiz will automatically submit in <span id="countdown"></span></div>
     </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'app1/js/take_quiz.js' %}"></script>
 {% endblock %}

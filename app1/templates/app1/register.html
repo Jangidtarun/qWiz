@@ -3,10 +3,15 @@
 
 {% block title %}Register for a new account{% endblock %}
 
+<!-- {% block css %}
+<link rel="stylesheet" href="{% static 'app1/css/login.css' %}">
+{% endblock %} -->
+
 
 {% block body %}
 
-<div class="modal modal-sheet position-static d-block bg-body-secondary py-md-5" tabindex="-1" role="dialog" id="modalSignin">
+<div class="modal modal-sheet position-static d-block bg-body-secondary py-md-5" tabindex="-1" role="dialog"
+  id="modalSignin">
   <div class="modal-dialog" role="document">
     <div class="modal-content rounded-4 shadow">
       <div class="modal-header p-5 pb-4 border-bottom-0">
@@ -16,35 +21,48 @@
       <div class="modal-body p-5 pt-0">
         {% if err_message %}<small class="text-warning">{{ err_message }}</small>{% endif %}
         <form action="{% url 'app1:register' %}" method="post">
-            {% csrf_token %}
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" id="floatingInput" placeholder="username" name="username">
-                <label for="floatingInput">Username</label>
+          {% csrf_token %}
+          
+          <div class="input-group">
+            <div class="form-floating mb-2">
+              <input type="text" class="form-control" id="firstname" placeholder="firstname"
+                name="firstname">
+              <label for="firstname">First Name</label>
             </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password" name="password">
-                <label for="floatingPassword">Password</label>
+            <div class="form-floating mb-2">
+              <input type="text" class="form-control" id="lastname" placeholder="lastname"
+                name="lastname">
+              <label for="lastname">Last Name</label>
             </div>
-            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign up</button>
-            <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
-            <p class="mt-2 mb-3 text-body-secondary">Already have an account? Login <a href="{% url 'app1:login' %}">here</a></p>
+          </div>
 
+          <div class="form-floating mb-2">
+            <input type="email" name="email" id="email" placeholder="email" class="form-control">
+            <label for="email">Email</label>
+          </div>
           
+          <div class="input-group">
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="username" placeholder="username" name="username">
+              <label for="username">Username</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password">
+              <label for="floatingPassword">Password</label>
+            </div>
+          </div>
+          <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign up</button>
+          <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
+          <p class="mt-2 mb-3 text-body-secondary">Already have an account? Login <a href="{% url 'app1:login' %}">here</a></p>
+
+
           <hr class="my-4">
-          
+
           <small class="text-warning">[to be implemented]</small>
           <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
-          <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#twitter"></use></svg>
-            Sign up with Twitter
-          </button>
-          <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#facebook"></use></svg>
-            Sign up with Facebook
-          </button>
-          <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#github"></use></svg>
-            Sign up with GitHub
+          <button class="w-100 py-2 mb-2 btn btn-outline-secondary" type="submit">
+            <i class="bi bi-google"></i>
+            Sign up with Google
           </button>
         </form>
       </div>

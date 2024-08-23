@@ -2,15 +2,32 @@
 
 {% block body %}
 
-<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+<div class="p-2 mb-4 bg-body-tertiary rounded-3">
     <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">{{ user.username }},</h1>
         <p class="col-md-8 fs-4">Your addition quiz is complete. View your score and analysis.</p>
 
-        <p class="fs-2">You scored {{ score }} out of {{ total_questions }}</p>
-        <p class="fs-1 text-success">{{ percentage }}%</p>
+        <hr class="col-3 col-md-2 mb-5">
+
+        <div class="row">
+            <div class="col-sm-4">
+                <p class="text-body-secondary fs-3">Score</p>
+                <p class="display-4">{{ score }}/{{ total_score }}</p>
+            </div>
+
+            <div class="col-sm-4">
+                <p class="text-body-secondary fs-3">Questions</p>
+                <p class="display-4">{{ questions_answered }} <span class="fs-4 text-success">{{correct_questions}}</span>/{{ total_questions }}</p>
+            </div>
+
+            <div class="col-sm-4">
+                <p class="text-body-secondary fs-3">Percentage</p>
+                <p class="display-4">{{ percentage }}%</p>
+            </div>
+        </div>
 
         <a class="btn btn-primary btn-lg" href="#">Dashboard</a>
+        <a class="btn btn-success btn-lg" href="#">Retake</a>
     </div>
 </div>
 

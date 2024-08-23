@@ -9,44 +9,54 @@
 
 {% block body %}
 
-<div class="modal modal-sheet position-static d-block bg-body-secondary py-md-5" tabindex="-1" role="dialog" id="modalSignin">
-    <div class="modal-dialog" role="document">
+<div class="modal modal-sheet position-static d-block bg-body-secondary py-md-5" tabindex="-1" role="dialog"
+  id="modalSignin">
+  <div class="modal-dialog" role="document">
     <div class="modal-content rounded-4 shadow">
-        <div class="modal-header p-5 pb-4 border-bottom-0"><h1 class="fw-bold mb-0 fs-2">Please Login</h1>
-    </div>
-    
-    <div class="modal-body p-5 pt-0">
+      <div class="modal-header p-5 pb-4 border-bottom-0">
+        <h1 class="fw-bold mb-0 fs-2">Please Login</h1>
+      </div>
+
+      <div class="modal-body p-5 pt-0">
         {% if err_message %}<small class="text-warning">{{ err_message }}</small>{% endif %}
         <form action="{% url 'app1:login' %}" method="post">
-            {% csrf_token %}
+          {% csrf_token %}
 
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control rounded-3" id="floatingInput" placeholder="username" name="username">
-                <label for="floatingInput">Username</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password" name="password">
-                <label for="floatingPassword">Password</label>
-            </div>
-            <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign in</button>
-            <p class="mt-2 mb-3 text-body-secondary">New to the qWiz? Register <a href="{% url 'app1:register' %}">here</a></p>
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control rounded-3" id="floatingInput" placeholder="username" name="username">
+            <label for="floatingInput">Username</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="password" class="form-control rounded-3" id="floatingPassword" placeholder="Password"
+              name="password">
+            <label for="floatingPassword">Password</label>
+          </div>
+          <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary" type="submit">Sign in</button>
+          <p class="mt-2 mb-3 text-body-secondary">New to the qWiz? Register <a
+              href="{% url 'app1:register' %}">here</a></p>
 
 
-          
+
           <hr class="my-4">
-          
+
           <small class="text-warning">[to be implemented]</small>
           <h2 class="fs-5 fw-bold mb-3">Or use a third-party</h2>
           <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#twitter"></use></svg>
+            <svg class="bi me-1" width="16" height="16">
+              <use xlink:href="#twitter"></use>
+            </svg>
             Log in with Twitter
           </button>
           <button class="w-100 py-2 mb-2 btn btn-outline-primary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#facebook"></use></svg>
+            <svg class="bi me-1" width="16" height="16">
+              <use xlink:href="#facebook"></use>
+            </svg>
             Log in with Facebook
           </button>
           <button class="w-100 py-2 mb-2 btn btn-outline-secondary rounded-3" type="submit">
-            <svg class="bi me-1" width="16" height="16"><use xlink:href="#github"></use></svg>
+            <svg class="bi me-1" width="16" height="16">
+              <use xlink:href="#github"></use>
+            </svg>
             Log in with GitHub
           </button>
         </form>

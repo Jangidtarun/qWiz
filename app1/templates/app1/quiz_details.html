@@ -4,26 +4,21 @@
 {% block body %}
 
 <main class="px-3">
-    <div class="d-flex align-items-end">
+    <div class="d-flex align-items-end flex-wrap">
         <h1>{{ quiz.title }}</h1>
-        <small class="m-0 ms-2 mb-2 text-muted">{{ quiz.created_at }}</small>
+        <!-- <small class="m-0 ms-2 mb-2 text-muted">{{ quiz.created_at }}</small> -->
     </div>
+    <!-- <p class="badge bg-body-secondary text-dark">Creator: {{ quiz.auther.first_name }} {{ quiz.auther.last_name }}</p> -->
     <p class="lead">{{ quiz.description }}</p>
 
-    <ul class="list-group" style="max-width: 400px;">
-        <li class="list-group-item d-flex justify-content-between align-items-center">Time Limit<span
-                class="badge bg-primary rounded-pill">{{ quiz.time_limit }} mins</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between align-items-center">Difficulty<span
-                class="badge bg-primary rounded-pill">{{ quiz.difficulty_level | title}}</span>
-        </li>
-
-        <li class="list-group-item d-flex justify-content-between align-items-center">Category<span
-                class="badge bg-primary rounded-pill">{{ quiz.category | title }}</span>
-        </li>
-    </ul>
-    <a href="{% url 'app1:take_quiz' quiz.id %}" class="btn btn-warning my-2" data-bs-toggle="modal"
-        data-bs-target="#modal-confirm">Take Quiz</a>
+    <div class="d-flex flex-row flex-wrap">
+        <li class="m-1 badge bg-body-secondary text-dark">{{ quiz.time_limit }} mins</li>
+        <li class="m-1 badge bg-body-secondary text-dark">{{ quiz.difficulty_level | title}}</li>
+        <li class="m-1 badge bg-body-secondary text-dark">{{ quiz.category | title }}</li>
+        <li class="m-1 badge bg-body-secondary text-dark">{{ points }} Poins</li>
+        <li class="m-1 badge bg-body-secondary text-dark">{{ num_questions }} Questions</li>
+    </div>
+    <a href="{% url 'app1:take_quiz' quiz.id %}" class="btn btn-success my-2" data-bs-toggle="modal" data-bs-target="#modal-confirm">Take Quiz</a>
 
     <div class="modal fade" id="modal-confirm" style="display: none;" aria-hidden="true">
         <div class="modal-dialog" role="document">

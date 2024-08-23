@@ -1,4 +1,8 @@
+from django.core.files.storage import default_storage
+from PIL import Image
+import math
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from django.db.models import Avg, Sum
@@ -128,14 +132,17 @@ def add_question(request, quiz_id):
 
 def quiz_details(request, quiz_id):
     curr_quiz = get_object_or_404(Quiz, pk=quiz_id)
+    total_points = 0
+    num_questions = 0
+    for question in curr_quiz.question_set.all():
+        total_points += question.points
+        num_questions += 1
     if curr_quiz is not None:
-        return render(
-            request,
-            "app1/quiz_details.html",
-            {
-                "quiz": curr_quiz,
-            },
-        )
+        return render(request, "app1/quiz_details.html", {
+            "quiz": curr_quiz,
+            'points': total_points,
+            'num_questions': num_questions,
+        },)
 
 
 @login_required
@@ -143,69 +150,102 @@ def takequizview(request, quiz_id):
     if request.method == "GET":
         quiz = get_object_or_404(Quiz, pk=quiz_id)
         questions = quiz.question_set.all()
-        return render(
-            request,
-            "app1/take_quiz.html",
-            {
+        return render(request, "app1/take_quiz.html", {
                 "quiz": quiz,
                 "questions": questions,
-            },
-        )
+        },)
+    return redirect('app1:results')
 
 
 def resultsview(request, quiz_id):
-    if request.method == "POST":
-        score = 0
-        quiz = get_object_or_404(Quiz, pk=quiz_id)
-        all_questions = quiz.question_set.all()
-        num_questions = all_questions.count()
+    score = 0
+    quiz = get_object_or_404(Quiz, pk=quiz_id)
+    all_questions = quiz.question_set.all()
+    num_questions = all_questions.count()
+    questions_answered = 0
+    total_score = 0
+    correct_questions = 0
 
-        for question in all_questions:
-            selected_choice = request.POST.get(f"option-{question.id}")
-            try:
-                choice = Choice.objects.get(
-                    pk=selected_choice, question=question, is_correct=True
-                )
-                if choice:
-                    score += 1
-            except Choice.DoesNotExist:
-                pass
+    for question in all_questions:
+        total_score += question.points
+        selected_choice = request.POST.get(f"option-{question.id}")
+        try:
+            choice = Choice.objects.get(pk=selected_choice, question=question)
+            if choice.is_correct == True:
+                score += question.points
+                correct_questions += 1
+            questions_answered += 1
+        except Choice.DoesNotExist:
+            pass
 
-        user = request.user
-        # Update or create a Score entry
-        score_obj, created = Score.objects.get_or_create(user=user, quiz=quiz)
-        score_obj.attempts += 1
-        score_obj.score = score
-        score_obj.save()
+    user = request.user
+    # create a Score entry
+    Score.objects.create(
+        user=user,
+        quiz=quiz,
+        score=score,
+    ).save()
 
-        percentage = (score / num_questions) * 100
-        context = {
-            "score": score,
-            "total_questions": num_questions,
-            "percentage": percentage,
-        }
-        return render(request, "app1/results.html", context)
+    percentage = math.ceil((score / total_score) * 100) 
+    context = {
+        "score": score,
+        "total_questions": num_questions,
+        'questions_answered': questions_answered,
+        'total_score': total_score,
+        'correct_questions': correct_questions,
+        "percentage": percentage,
+    }
+    return render(request, "app1/results.html", context)
 
 
 def user_profile_view(request):
     user = request.user
 
-    # Total attempts
-    total_attempts = Score.objects.filter(user=user).aggregate(Sum('attempts'))['attempts__sum'] or 0
+    if request.method == 'POST':
+        profile_picture = request.FILES.get('profile_picture')
+        if profile_picture:
+            # Save the original image to the media directory
+            image_path = default_storage.save(profile_picture.name, profile_picture)
+            image = Image.open(default_storage.path(image_path))
 
-    # Total time spent (approximation based on quiz time limits)
-    total_time_spent = sum(Score.objects.filter(user=user).values_list('quiz__time_limit', flat=True))
+            # Resize the image to 400x400 pixels
+            image = image.resize((400, 400), Image.ANTIALIAS)
 
-    # Average score
-    average_score = Score.objects.filter(user=user).exclude(score__isnull=True).exclude(score=0).aggregate(Avg('score'))['score__avg'] or 0
-    context = {
-        'user': user,
-        'total_attempts': total_attempts,
-        'total_time_spent': total_time_spent,
-        'average_score': average_score,
-    }
+            # Save the resized image back to the media directory
+            resized_image_path = default_storage.save(f"resized_{image_path}", image)
 
-    return render(request, 'app1/user_profile.html', context)
+            # Update the user's profile picture field
+            user.profile_picture = resized_image_path
+            user.save()
+
+    else:
+        scorelist = Score.objects.filter(user=user, score__isnull=False)
+
+        total_score_so_far = 0
+        total_quiz_attemps = scorelist.count()
+        total_points = 0
+
+        total_contribution = Quiz.objects.filter(auther=user).count()
+
+        for scoreobj in scorelist:
+            total_score_so_far += scoreobj.score
+            
+            for question in scoreobj.quiz.question_set.all():
+                    total_points += question.points
+
+        average_score = 0
+        if total_points is not 0:
+            average_score = (total_score_so_far/total_points) * 100
+        average_score = math.ceil(average_score)
+
+        context = {
+            'user': user,
+            'total_attempts': total_quiz_attemps,
+            'average_score': average_score,
+            'quizzes_created': total_contribution,
+        }
+
+        return render(request, 'app1/user_profile.html', context)
 
 
 def login_user(request):
@@ -231,27 +271,24 @@ def login_user(request):
 def register(request):
     if request.method == "POST":
         username = request.POST["username"]
-
-        # Ensure password matches confirmation
         password = request.POST["password"]
-        # confirmation = request.POST["confirmation"]
-        # if password != confirmation:
-        #     return render(request, "app1/register.html", {
-        #         "message": "Passwords must match."
-        #     })
+        firstname = request.POST['firstname']
+        lastname = request.POST['lastname']
+        email = request.POST['email']
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(
                 username=username,
                 password=password,
+                first_name=firstname,
+                last_name=lastname,
+                email=email
             )
             user.save()
         except IntegrityError:
-            return render(
-                request,
-                "app1/register.html",
-                {"err_message": "Username already taken."},
+            return render(request, "app1/register.html", {
+                "err_message": "Username already taken."},
             )
         login(request, user)
         return redirect("app1:index")

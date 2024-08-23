@@ -1,16 +1,31 @@
 {% extends "app1/base.html" %}
+{% load static %}
 
 {% block body %}
 
-<main>
 
+<main>
+  <div class="container marketing">
+
+    <div class="row featurette">
+      <div class="col-md-7">
+        <h2 class="featurette-heading fw-normal lh-1">Ace Your Quizzes with Our Interactive Platform. <span class="text-body-secondary">Its really simple.</span></h2>
+        <p class="lead">Our innovative quiz app offers a fun and engaging way to test your knowledge and improve your skills. With a wide range of subjects and difficulty levels, there's something for everyone. Track your progress, compete with friends, and unlock achievements as you master new topics.</p>
+      </div>
+      <div class="col-md-5">
+        <img class="rounded-circle bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="300" height="300" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false" src="{% static 'app1/images/key-400.png' %}" alt="key-400">
+      </div>
+    </div>
+    <hr class="featurette-divider">
+  </div>
+
+    
   <section class="py-2 text-center container">
     <div class="row py-lg-5">
       <div class="col-lg-6 col-md-8 mx-auto">
         <h1 class="fw-light">Available Quizzes</h1>
         <p class="lead text-body-secondary">A collection of quizzes on various topics.</p>
         <p>
-          <a href="{% url 'app1:allquizzes' %}" class="btn btn-primary my-2">All Quizzes</a>
           <a href="{% url 'app1:archived' %}" class="btn btn-secondary my-2">Go to Archive</a>
         </p>
       </div>
